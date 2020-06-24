@@ -10,7 +10,7 @@ import logo from "./logo.svg";
 const App = () => {
   return (
     <>
-      <Header id="#header" logoSrc={logo} title="Learn words" />
+      <Header logoSrc={logo} title="Learn words" />
       <HeaderBlock
         title="Учите слова онлайн"
         description="Воспользуйтесь карточками для запоминания и пополнения активныйх словарных запасов"
