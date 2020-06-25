@@ -1,0 +1,23 @@
+.bgImageBlock {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: auto;
+  &:before {
+    content: "";
+    display: block;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+  }
+}
