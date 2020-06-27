@@ -4,10 +4,9 @@
   margin-bottom: 12px;
   cursor: pointer;
   perspective: 1000px;
-  height: 33px;
+  height: 55px;
   width: 170px;
-  margin-right: 12px;
-
+  margin: 15px;
   &.done{
     .cardInner {
       transform: rotateY(180deg);
@@ -29,11 +28,12 @@
 .cardFront,
 .cardBack {
   position: absolute;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  padding: 6px 12px;
+  padding: 12px 12px;
 }
 
 .cardFront {

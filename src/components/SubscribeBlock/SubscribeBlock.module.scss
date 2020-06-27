@@ -1,0 +1,31 @@
+.subscribe {
+  &__form {
+    display: block;
+    transition: 0.3s all;
+    transform: scale(1);
+    opacity: 1;
+    &_hide {
+      transform: scale(0);
+      opacity: 0;
+    }
+  }
+  &__input,
+  &__btn {
+    padding: 5px;
+    margin: 4px;
+    height: 50px;
+    box-sizing: border-box;
+    border: 1px solid black;
+    transition: 0.3s;
+    &:hover {
+      background-color: rgba(white, 0.4);
+    }
+  }
+  &__input {
+    width: 300px;
+  }
+  &__btn {
+    background-color: #fff;
+    cursor: pointer;
+  }
+}
