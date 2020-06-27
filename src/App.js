@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./components/Header";
 import HeaderBlock from "./components/HeaderBlock";
-import TextBlock from "./components/TextBlock";
+import Paragraph from "./components/Paragraph";
 import BgImageBlock from "./components/BgImageBlock";
 import Card from "./components/Card";
 
@@ -9,6 +9,8 @@ import { wordsList } from "./data/wordsList";
 
 import Footer from "./components/Footer";
 import logo from "./logo.svg";
+import subscribeImg from "./assets/img/449.jpg";
+import cardsImg from "./assets/img/450.jpg";
 
 const App = () => {
   return (
