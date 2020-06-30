@@ -1,13 +1,12 @@
 .card {
   font-size: 18px;
   text-align: center;
-  margin-bottom: 12px;
   cursor: pointer;
   perspective: 1000px;
   height: 55px;
   width: 170px;
-  margin: 15px;
-  &.done{
+  margin: 20px;
+  &.done {
     .cardInner {
       transform: rotateY(180deg);
     }
@@ -45,4 +44,35 @@
   background-color: #1bb95e;
   color: white;
   transform: rotateY(180deg);
+}
+
+.cardRemembered {
+  .cardFront,
+  .cardBack {
+    text-decoration: line-through;
+  }
+}
+
+.cardControls {
+  display: flex;
+  flex-direction: row;
+  button {
+    width: 50%;
+    padding: 5px;
+    margin: 0;
+    color: white;
+    border: none;
+    cursor: pointer;
+    &:disabled {
+      background-color: lightgray;
+    }
+  }
+}
+
+.cardRememberBtn {
+  background-color: #1bb95e;
+}
+
+.cardCloseBtn {
+  background-color: #cf1322;
 }
