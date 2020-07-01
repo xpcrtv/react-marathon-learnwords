@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { SwapOutlined, FileAddOutlined } from "@ant-design/icons";
 import { v4 as uuidv4 } from "uuid";
 import { getTranslatedWord } from "../../services/dictionary";
+import { Form, Button, Input } from "antd";
 import Card from "../Card";
 import BlockTitle from "../BlockTitle";
 import s from "./CardList.module.scss";
@@ -10,10 +11,11 @@ class CardList extends Component {
   state = {
     wordRus: "",
     wordEng: "",
+    isTranslating: false,
+    isAddingWord: false,
   };
 
-  addCard = (event) => {
-    event.preventDefault();
+  addCard = () => {
     this.props.onAddItem({
       id: uuidv4(),
       rus: this.state.wordRus,
@@ -23,15 +25,16 @@ class CardList extends Component {
       return {
         wordEng: "",
         wordRus: "",
+        isAddingWord: false,
       };
     });
   };
 
   changeInputValue = (event) => {
-    const { id, value } = event.target;
+    const { dataset, value } = event.target;
     this.setState(() => {
       return {
-        [id]: value,
+        [dataset.lang]: value,
       };
     });
   };
@@ -39,49 +42,77 @@ class CardList extends Component {
   translateWord = async () => {
     const { wordEng } = this.state;
     const translatedWord = await getTranslatedWord(wordEng);
-    console.log()
     this.setState(() => {
       return {
         wordRus: translatedWord.translate,
+        isTranslating: false,
       };
     });
   };
 
+  handleAddWord = (event) => {
+    event.preventDefault();
+    this.setState(
+      {
+        isAddingWord: true,
+      },
+      this.addCard
+    );
+  };
+
+  handleTranslate = async () => {
+    this.setState(
+      {
+        isTranslating: true,
+      },
+      this.translateWord
+    );
+  };
+
   render() {
     const { data = [], onDeletedItem } = this.props;
-    const { wordEng, wordRus } = this.state;
+    const { wordEng, wordRus, isTranslating, isAddingWord } = this.state;
     return (
       <>
         <BlockTitle color="white">
           Кликайте по карточкам и узнавайте новые слова!
         </BlockTitle>
-        <form className={s.cardsAddForm} onSubmit={this.addCard}>
-          <label htmlFor="wordEng">
-            Перевод слова
-            <input
-              type="text"
-              id="wordEng"
-              onChange={this.changeInputValue}
+        <Form layout="horizontal">
+          <Input.Group compact>
+            <Input
+              placeholder="Слово на английском"
+              data-lang="wordEng"
               value={wordEng}
-            />
-          </label>
-          <i className={s.cardsAddFormIcon} onClick={this.translateWord}>
-            <SwapOutlined />
-          </i>
-          <label htmlFor="wordRus">
-            Слово на русском
-            <input
-              type="text"
-              id="wordRus"
               onChange={this.changeInputValue}
-              value={wordRus}
+              prefix="ENG"
+              style={{ width: "32.5%" }}
             />
-          </label>
-          <button className={s.cardsAddFormBtn}>
-            {" "}
-            <FileAddOutlined /> Добавить слово
-          </button>
-        </form>
+            <Button
+              type="primary"
+              onClick={this.handleTranslate}
+              icon={<SwapOutlined />}
+              loading={isTranslating}
+              style={{ width: "5%" }}
+            />
+            <Input
+              placeholder="Слово на русском"
+              data-lang="wordRus"
+              value={wordRus}
+              onChange={this.changeInputValue}
+              prefix="РУС"
+              style={{ width: "30%" }}
+            />
+            <Button
+              type="primary"
+              icon={<FileAddOutlined />}
+              onClick={this.handleAddWord}
+              style={{ width: "32.5%" }}
+              loading={isAddingWord}
+            >
+              Добавить слово
+            </Button>
+          </Input.Group>
+        </Form>
         <div className={s.cards}>
           {data.map(({ id, eng, rus }) => (
             <Card
