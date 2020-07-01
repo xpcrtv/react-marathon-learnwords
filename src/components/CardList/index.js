@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { SwapOutlined, FileAddOutlined } from "@ant-design/icons";
 import { v4 as uuidv4 } from "uuid";
+import { getTranslatedWord } from "../../services/dictionary";
 import Card from "../Card";
 import BlockTitle from "../BlockTitle";
 import s from "./CardList.module.scss";
@@ -35,6 +36,17 @@ class CardList extends Component {
     });
   };
 
+  translateWord = async () => {
+    const { wordEng } = this.state;
+    const translatedWord = await getTranslatedWord(wordEng);
+    console.log()
+    this.setState(() => {
+      return {
+        wordRus: translatedWord.translate,
+      };
+    });
+  };
+
   render() {
     const { data = [], onDeletedItem } = this.props;
     const { wordEng, wordRus } = this.state;
@@ -44,16 +56,6 @@ class CardList extends Component {
           Кликайте по карточкам и узнавайте новые слова!
         </BlockTitle>
         <form className={s.cardsAddForm} onSubmit={this.addCard}>
-          <label htmlFor="wordRus">
-            Слово на русском
-            <input
-              type="text"
-              id="wordRus"
-              onChange={this.changeInputValue}
-              value={wordRus}
-            />
-          </label>
-          <i className={s.cardsAddFormIcon}><SwapOutlined /></i>
           <label htmlFor="wordEng">
             Перевод слова
             <input
@@ -63,7 +65,22 @@ class CardList extends Component {
               value={wordEng}
             />
           </label>
-          <button className={s.cardsAddFormBtn}> <FileAddOutlined /> Добавить слово</button>
+          <i className={s.cardsAddFormIcon} onClick={this.translateWord}>
+            <SwapOutlined />
+          </i>
+          <label htmlFor="wordRus">
+            Слово на русском
+            <input
+              type="text"
+              id="wordRus"
+              onChange={this.changeInputValue}
+              value={wordRus}
+            />
+          </label>
+          <button className={s.cardsAddFormBtn}>
+            {" "}
+            <FileAddOutlined /> Добавить слово
+          </button>
         </form>
         <div className={s.cards}>
           {data.map(({ id, eng, rus }) => (

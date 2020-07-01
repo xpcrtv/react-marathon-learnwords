@@ -8,7 +8,7 @@ import CardList from "./components/CardList";
 import FeaturesList from "./components/FeaturesList";
 import SubscribeBlock from "./components/SubscribeBlock";
 
-import { wordsList as words } from "./data/wordsList";
+import Firebase from "./services/firebase";
 import { featuresContent as features } from "./data/featuresContent";
 
 import Footer from "./components/Footer";
@@ -16,15 +16,30 @@ import logo from "./logo.svg";
 import subscribeImg from "./assets/img/449.jpg";
 import cardsImg from "./assets/img/450.jpg";
 
+const database = new Firebase().db;
+
 class App extends Component {
   state = {
-    words,
+    words: [],
     features,
   };
 
+  componentDidMount() {
+    database
+      .ref("/cards")
+      .once("value")
+      .then((response) => {
+        this.setState({
+          words: response.val(),
+        });
+      });
+  }
+
   deleteWord = (id) => {
+    const { words } = this.state;
+    const deletedWordIndex = words.findIndex((word) => word.id === id);
+    database.ref(`/cards/${deletedWordIndex}`).remove();
     this.setState(({ words }) => {
-      const deletedWordIndex = words.findIndex((word) => word.id === id);
       const filtredWords = words.filter(
         (word, idx) => idx !== deletedWordIndex
       );
@@ -35,11 +50,17 @@ class App extends Component {
   };
 
   addWord = (word) => {
-    this.setState(({ words }) => {
-      return {
-        words: [...words, word],
-      };
-    });
+    const { words } = this.state;
+    database
+      .ref("/cards")
+      .set([...words, word])
+      .then(() => {
+        this.setState(({ words }) => {
+          return {
+            words: [...words, word],
+          };
+        });
+      });
   };
 
   render() {
