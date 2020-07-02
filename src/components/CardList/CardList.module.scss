@@ -31,10 +31,12 @@
     margin: 5px;
     border-radius: 4px;
     border: none;
+    color: black;
   }
   &Icon {
     width: 5%;
     color: white;
+    cursor: pointer;
     @media screen and (max-width: 768px) {
       display: none;
     }
