@@ -1,0 +1,18 @@
+.page {
+  display: flex;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
+  background-image: url("../../assets/img/login.jpg");
+}
+.form_wrap {
+  background-color: #fff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 478px;
+  padding: 24px 24px 0 24px;
+  box-sizing: border-box;
+}
