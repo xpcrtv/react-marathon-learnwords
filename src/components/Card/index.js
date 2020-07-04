@@ -1,43 +1,27 @@
 import React, { Component } from "react";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import classnames from "classnames";
+
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import s from "./Card.module.scss";
 
 class Card extends Component {
   state = {
     done: false,
-    isRemembered: false,
   };
 
   toggleCard = () => {
-    if (!this.state.isRemembered) {
-      this.setState(({ done }) => {
-        return {
-          done: !done,
-        };
-      });
-    }
-  };
-
-  rememberCard = (event) => {
-    event.preventDefault();
-    this.setState(({ isRemembered }) => {
+    this.setState(({ done }) => {
       return {
-        done: true,
-        isRemembered: true,
+        done: !done,
       };
     });
   };
 
-  deleteCard = (event) => {
-    event.preventDefault();
-    this.props.onDeleteCard();
-  };
-
   render() {
-    const { eng, rus } = this.props;
-    const { done, isRemembered } = this.state;
-    const cardClass = classnames(s.card, { [s.done]: done });
+    const { onDeleteCard, onUpdateCard, cardData } = this.props;
+    const { eng, rus, isRemembered } = cardData;
+    const { done } = this.state;
+    const cardClass = classnames(s.card, { [s.done]: done || isRemembered });
     return (
       <div className={cardClass}>
         <div
@@ -50,10 +34,14 @@ class Card extends Component {
           <div className={s.cardBack}>{rus}</div>
         </div>
         <div className={s.cardControls}>
-          <button className={s.cardRememberBtn} onClick={this.rememberCard} disabled={isRemembered}>
+          <button
+            className={s.cardRememberBtn}
+            onClick={onUpdateCard}
+            disabled={isRemembered}
+          >
             <CheckCircleOutlined />
           </button>
-          <button className={s.cardCloseBtn} onClick={this.deleteCard}>
+          <button className={s.cardCloseBtn} onClick={onDeleteCard}>
             <CloseCircleOutlined />
           </button>
         </div>
@@ -61,4 +49,5 @@ class Card extends Component {
     );
   }
 }
+
 export default Card;
