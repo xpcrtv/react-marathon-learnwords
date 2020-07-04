@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Form, Input, Button } from "antd";
 
 import FirebaseContext from "../../context/firebaseContext";
@@ -40,8 +40,10 @@ class SignInForm extends Component {
           />
         </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
+        <Form.Item
+          wrapperCol={{ span: 14, offset: 5 }}
+        >
+          <Button block type="primary" htmlType="submit" icon={<UserAddOutlined />}>
             Зарегистрироваться
           </Button>
         </Form.Item>

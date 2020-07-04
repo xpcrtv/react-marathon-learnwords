@@ -3,9 +3,13 @@ import s from "./Login.module.scss";
 
 import LoginForm from "../../components/LoginForm";
 import SingInform from "../../components/SingInform";
+import BlockTitle from "../../components/BlockTitle";
 
 import { Layout, Button } from "antd";
 import FirebaseContext from "../../context/firebaseContext";
+
+import logoSrc from "../../logo.svg";
+
 const { Content } = Layout;
 
 class LoginPage extends Component {
@@ -27,13 +31,15 @@ class LoginPage extends Component {
           <Content>
             <div className={s.loginPage}>
               <div className={s.loginCard}>
-                <h2>
+                <div className={s.loginCardLogo}>
+                  <img src={logoSrc} alt="" />
+                </div>
+                <BlockTitle>
                   {isSignIn ? "Приветствуем тебя!" : "Вход на LearnWords"}
-                </h2>
+                </BlockTitle>
                 {isSignIn ? <SingInform /> : <LoginForm />}
                 <div className={s.loginCardControls}>
-                  <span>или</span>
-                  <Button onClick={this.toggleForms}>
+                  <Button type="link" onClick={this.toggleForms}>
                     {isSignIn ? "Вход" : "Регистрация"}
                   </Button>
                 </div>

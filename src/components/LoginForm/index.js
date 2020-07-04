@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, LoginOutlined } from "@ant-design/icons";
 import { Form, Input, Button } from "antd";
 
 import FirebaseContext from "../../context/firebaseContext";
@@ -8,7 +8,7 @@ import FirebaseContext from "../../context/firebaseContext";
 class LoginForm extends Component {
   onFinish = ({ email, password }) => {
     const { signWithEmail } = this.context;
-    signWithEmail(email, password).then(res => console.log(res))
+    signWithEmail(email, password).then((res) => console.log(res));
   };
   render() {
     return (
@@ -40,8 +40,13 @@ class LoginForm extends Component {
           />
         </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
+        <Form.Item wrapperCol={{ span: 10, offset: 7 }}>
+          <Button
+            block
+            type="primary"
+            htmlType="submit"
+            icon={<LoginOutlined />}
+          >
             Войти
           </Button>
         </Form.Item>
