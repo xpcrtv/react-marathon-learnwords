@@ -1,11 +1,16 @@
 import React, { Component } from "react";
-import { SwapOutlined, FileAddOutlined } from "@ant-design/icons";
-import { v4 as uuidv4 } from "uuid";
+
 import { getTranslatedWord } from "../../services/dictionary";
-import { Form, Button, Input } from "antd";
+
 import Card from "../Card";
 import BlockTitle from "../BlockTitle";
+
+import { SwapOutlined, FileAddOutlined } from "@ant-design/icons";
+import { Form, Button, Input } from "antd";
+
 import s from "./CardList.module.scss";
+
+import FirebaseContext from "../../context/firebaseContext";
 
 class CardList extends Component {
   state = {
@@ -16,18 +21,19 @@ class CardList extends Component {
   };
 
   addCard = () => {
-    this.props.onAddItem({
-      id: uuidv4(),
-      rus: this.state.wordRus,
-      eng: this.state.wordEng,
-    });
-    this.setState(() => {
-      return {
-        wordEng: "",
-        wordRus: "",
-        isAddingWord: false,
-      };
-    });
+    const { getUserCardsRef } = this.context;
+    getUserCardsRef()
+      .push()
+      .set({
+        rus: this.state.wordRus,
+        eng: this.state.wordEng,
+        isRemembered: false,
+      })
+      .then(() => {
+        this.setState({
+          isAddingWord: false,
+        });
+      });
   };
 
   changeInputValue = (event) => {
@@ -114,11 +120,10 @@ class CardList extends Component {
           </Input.Group>
         </Form>
         <div className={s.cards}>
-          {data.map(({ id, eng, rus }) => (
+          {data.map(({ id, ...cardData }) => (
             <Card
               key={id}
-              eng={eng}
-              rus={rus}
+              cardData={cardData}
               onDeleteCard={() => onDeletedItem(id)}
             />
           ))}
@@ -127,5 +132,7 @@ class CardList extends Component {
     );
   }
 }
+
+CardList.contextType = FirebaseContext;
 
 export default CardList;

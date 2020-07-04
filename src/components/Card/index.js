@@ -1,43 +1,47 @@
 import React, { Component } from "react";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import classnames from "classnames";
+
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import s from "./Card.module.scss";
+import FirebaseContext from "../../context/firebaseContext";
 
 class Card extends Component {
   state = {
     done: false,
-    isRemembered: false,
   };
 
   toggleCard = () => {
-    if (!this.state.isRemembered) {
-      this.setState(({ done }) => {
-        return {
-          done: !done,
-        };
-      });
-    }
+    this.setState(({ done }) => {
+      return {
+        done: !done,
+      };
+    });
   };
 
   rememberCard = (event) => {
     event.preventDefault();
-    this.setState(({ isRemembered }) => {
-      return {
-        done: true,
-        isRemembered: true,
-      };
+    const { updateUserCard } = this.context;
+    const { id } = this.props.cardData;
+    updateUserCard(id, { isRemembered: true }).then(() => {
+      this.setState(() => {
+        return {
+          done: true,
+        };
+      });
     });
   };
 
   deleteCard = (event) => {
     event.preventDefault();
-    this.props.onDeleteCard();
+    const { removeUserCard } = this.context;
+    const { id } = this.props.cardData;
+    removeUserCard(id);
   };
 
   render() {
-    const { eng, rus } = this.props;
-    const { done, isRemembered } = this.state;
-    const cardClass = classnames(s.card, { [s.done]: done });
+    const { eng, rus, isRemembered } = this.props.cardData;
+    const { done } = this.state;
+    const cardClass = classnames(s.card, { [s.done]: done || isRemembered });
     return (
       <div className={cardClass}>
         <div
@@ -50,7 +54,11 @@ class Card extends Component {
           <div className={s.cardBack}>{rus}</div>
         </div>
         <div className={s.cardControls}>
-          <button className={s.cardRememberBtn} onClick={this.rememberCard} disabled={isRemembered}>
+          <button
+            className={s.cardRememberBtn}
+            onClick={this.rememberCard}
+            disabled={isRemembered}
+          >
             <CheckCircleOutlined />
           </button>
           <button className={s.cardCloseBtn} onClick={this.deleteCard}>
@@ -61,4 +69,7 @@ class Card extends Component {
     );
   }
 }
+
+Card.contextType = FirebaseContext;
+
 export default Card;

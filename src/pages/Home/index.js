@@ -1,21 +1,21 @@
 import React, { Component } from "react";
-// import s from "./Home.module.scss";
 
 import Header from "../../components/Header";
 import HeaderBlock from "../../components/HeaderBlock";
 import Paragraph from "../../components/Paragraph";
 import BgImageBlock from "../../components/BgImageBlock";
+
 import CardList from "../../components/CardList";
 import FeaturesList from "../../components/FeaturesList";
 import SubscribeBlock from "../../components/SubscribeBlock";
 
-import FirebaseContext from "../../context/firebaseContext";
 import { featuresContent as features } from "../../data/featuresContent";
 
 import Footer from "../../components/Footer";
 import logo from "../../logo.svg";
 import subscribeImg from "../../assets/img/449.jpg";
 import cardsImg from "../../assets/img/450.jpg";
+import FirebaseContext from "../../context/firebaseContext";
 
 class HomePage extends Component {
   state = {
@@ -25,25 +25,17 @@ class HomePage extends Component {
 
   componentDidMount() {
     const { getUserCardsRef } = this.context;
-    getUserCardsRef().on("value", (response) => {
+    getUserCardsRef().on("value", (res) => {
+      const resValues = res.val() || [];
+      const wordsarray = Object.keys(resValues).map((key) => ({
+        id: key,
+        ...resValues[key],
+      }));
       this.setState({
-        words: response.val() || [],
+        words: wordsarray,
       });
     });
   }
-
-  deleteWord = (id) => {
-    const { words } = this.state;
-    const { getUserCardsRef } = this.context;
-    const newWordsList = words.filter((word) => word.id !== id);
-    getUserCardsRef().set(newWordsList);
-  };
-
-  addWord = (word) => {
-    const { words } = this.state;
-    const { getUserCardsRef } = this.context;
-    getUserCardsRef().set([...words, word]);
-  };
 
   render() {
     const { words, features } = this.state;
@@ -60,8 +52,6 @@ class HomePage extends Component {
         <BgImageBlock imgSrc={cardsImg} bgcSize="cover">
           <CardList
             data={words}
-            onDeletedItem={this.deleteWord}
-            onAddItem={this.addWord}
           />
         </BgImageBlock>
         <BgImageBlock imgSrc={subscribeImg} bgcSize="cover">
