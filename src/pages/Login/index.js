@@ -1,100 +1,47 @@
 import React, { Component } from "react";
 import s from "./Login.module.scss";
 
-import BlockTitle from "../../components/BlockTitle";
+import LoginForm from "../../components/LoginForm";
+import SingInform from "../../components/SingInform";
 
+import { Layout, Button } from "antd";
 import FirebaseContext from "../../context/firebaseContext";
-
-import { LoginOutlined, MailOutlined, KeyOutlined } from "@ant-design/icons";
-import { Layout, Form, Input, Button, Space } from "antd";
-
 const { Content } = Layout;
 
 class LoginPage extends Component {
-  onFinish = ({ email, password }) => {
-    const { signWithEmail } = this.context;
-    signWithEmail(email.trim(), password.trim()).catch((err) => {
-      console.log(err);
+  state = {
+    isSignIn: false,
+  };
+  toggleForms = () => {
+    this.setState(({ isSignIn }) => {
+      return {
+        isSignIn: !isSignIn,
+      };
     });
   };
-  onFinishFailed = (msgErr) => console.log(msgErr);
-
-  renderForm = () => {
-    const layout = {
-      labelCol: {
-        span: 24,
-      },
-      wrapperCol: {
-        span: 24,
-      },
-    };
-    const tailLayout = {
-      wrapperCol: {
-        offset: 0,
-        span: 24,
-      },
-    };
-    return (
-      <Form
-        {...layout}
-        layout="vertical"
-        name="basic"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={this.onFinish}
-        onFinishFailed={this.onFinishFailed}
-      >
-        <Form.Item
-          label="Логин"
-          name="email"
-          type="email"
-          rules={[
-            {
-              required: true,
-              message: "Введите свой email!",
-            },
-          ]}
-        >
-          <Input prefix={<MailOutlined />} />
-        </Form.Item>
-
-        <Form.Item
-          label="Пароль"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Введите свой пороль!",
-            },
-          ]}
-        >
-          <Input.Password prefix={<KeyOutlined />} />
-        </Form.Item>
-
-        <Form.Item {...tailLayout}>
-          <Space>
-            <Button type="primary" htmlType="submit" icon={<LoginOutlined />}>
-              Войти
-            </Button>
-          </Space>
-        </Form.Item>
-      </Form>
-    );
-  };
-
   render() {
+    const { isSignIn } = this.state;
     return (
-      <Layout>
-        <Content>
-          <div className={s.page}>
-            <div className={s.form_wrap}>
-              <BlockTitle>Добро пожаловать в LearnWords!</BlockTitle>
-              {this.renderForm()}
+      <>
+        <Layout>
+          <Content>
+            <div className={s.loginPage}>
+              <div className={s.loginCard}>
+                <h2>
+                  {isSignIn ? "Приветствуем тебя!" : "Вход на LearnWords"}
+                </h2>
+                {isSignIn ? <SingInform /> : <LoginForm />}
+                <div className={s.loginCardControls}>
+                  <span>или</span>
+                  <Button onClick={this.toggleForms}>
+                    {isSignIn ? "Вход" : "Регистрация"}
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-        </Content>
-      </Layout>
+          </Content>
+        </Layout>
+      </>
     );
   }
 }
