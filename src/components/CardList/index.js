@@ -35,6 +35,16 @@ class CardList extends Component {
       });
   };
 
+  removeCard = (id) => {
+    const { removeUserCard } = this.context;
+    removeUserCard(id);
+  };
+
+  rememberCard = (id) => {
+    const { updateUserCard } = this.context;
+    updateUserCard(id, { isRemembered: true });
+  };
+
   changeInputValue = (event) => {
     const { dataset, value } = event.target;
     this.setState(() => {
@@ -120,7 +130,12 @@ class CardList extends Component {
         </Form>
         <div className={s.cards}>
           {data.map((cardData) => (
-            <Card key={cardData.id} cardData={cardData} />
+            <Card
+              key={cardData.id}
+              cardData={cardData}
+              onDeleteCard={() => this.removeCard(cardData.id)}
+              onUpdateCard={() => this.rememberCard(cardData.id)}
+            />
           ))}
         </div>
       </>
