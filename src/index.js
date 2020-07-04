@@ -5,7 +5,6 @@ import App from "./App";
 import FirebaseContext from "./context/firebaseContext";
 
 import "antd/dist/antd.css";
-import "./index.css";
 import Firebase from "./services/firebase";
 
 ReactDOM.render(

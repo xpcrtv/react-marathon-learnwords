@@ -34,16 +34,20 @@ class Firebase {
 
   setUserUid = (uid) => (this.userUid = uid);
 
-  createUserWithEmailAndPassword = (email, password) => {
-    this.auth.createUserWithEmailAndPassword(email, password);
-  };
+  getUserCardsRef = () => this.db.ref(`/cards/${this.userUid}`);
+
+  removeUserCard = (id) => this.db.ref(`/cards/${this.userUid}/${id}`).remove();
+
+  updateUserCard = (id, update) =>
+    this.db.ref(`/cards/${this.userUid}/${id}`).update(update);
 
   signWithEmail = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
 
-  logout = () => this.auth.signOut().catch((err) => (this.error = err));
+  createUserWithemail = (email, password) =>
+    this.auth.createUserWithEmailAndPassword(email, password);
 
-  getUserCardsRef = () => this.db.ref(`/cards/${this.userUid}`);
+  logout = () => this.auth.signOut().catch((err) => (this.error = err));
 }
 
 export default Firebase;
