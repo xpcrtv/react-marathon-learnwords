@@ -6,14 +6,31 @@ import { Form, Input, Button } from "antd";
 import FirebaseContext from "../../context/firebaseContext";
 
 class LoginForm extends Component {
+  state = {
+    validateStatus: null,
+    errorMsg: null,
+  };
+
   onFinish = ({ email, password }) => {
     const { signWithEmail } = this.context;
-    signWithEmail(email, password).then((res) => console.log(res));
+    signWithEmail(email, password)
+      .then((res) => console.log(res))
+      .catch((err) => this.onFinishFailed(err));
   };
+
+  onFinishFailed = () => {
+    this.setState({
+      validateStatus: "error",
+      errorMsg: "Email или пароль введены неверно",
+    });
+  };
+
   render() {
+    const { validateStatus, errorMsg } = this.state;
     return (
-      <Form onFinish={this.onFinish}>
+      <Form onFinish={this.onFinish} onFinishFailed={this.onFinishFailed}>
         <Form.Item
+          validateStatus={validateStatus}
           name="email"
           rules={[
             {
@@ -25,6 +42,8 @@ class LoginForm extends Component {
           <Input prefix={<UserOutlined />} placeholder="email" type="email" />
         </Form.Item>
         <Form.Item
+          help={errorMsg}
+          validateStatus={validateStatus}
           name="password"
           rules={[
             {

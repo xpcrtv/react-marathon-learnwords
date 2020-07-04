@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import { getTranslatedWord } from "../../services/dictionary";
-
 import Card from "../Card";
 import BlockTitle from "../BlockTitle";
 
@@ -76,7 +75,7 @@ class CardList extends Component {
   };
 
   render() {
-    const { data = [], onDeletedItem } = this.props;
+    const { data = [] } = this.props;
     const { wordEng, wordRus, isTranslating, isAddingWord } = this.state;
     return (
       <>
@@ -120,12 +119,8 @@ class CardList extends Component {
           </Input.Group>
         </Form>
         <div className={s.cards}>
-          {data.map(({ id, ...cardData }) => (
-            <Card
-              key={id}
-              cardData={cardData}
-              onDeleteCard={() => onDeletedItem(id)}
-            />
+          {data.map((cardData) => (
+            <Card key={cardData.id} cardData={cardData} />
           ))}
         </div>
       </>
