@@ -13,8 +13,12 @@ class SignInForm extends Component {
 
   onFinish = ({ email, password }) => {
     const { createUserWithemail } = this.context;
+    const { history } = this.props;
     createUserWithemail(email, password)
-      .then((res) => console.log(res))
+      .then((res) => {
+        localStorage.setItem("user", JSON.stringify(res.user.uid));
+        history.push("/");
+      })
       .catch((error) => this.onFinishFailed(error));
   };
 

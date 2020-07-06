@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import s from "./Header.module.scss";
 
 import { LogoutOutlined } from "@ant-design/icons";
@@ -16,16 +17,16 @@ class Header extends Component {
     return (
       <header className={s.header}>
         {logoSrc && (
-          <a href="/" className={s.logo}>
+          <Link to="/" className={s.logo}>
             <img src={logoSrc} alt="" />
-          </a>
+          </Link>
         )}
         {title && <h1 className={s.header__title}>{title}</h1>}
         <div className={s.header__nav}>
           <Button
             icon={<LogoutOutlined />}
             onClick={this.handleLogout}
-            ghost 
+            ghost
             size="large"
           >
             Выйти

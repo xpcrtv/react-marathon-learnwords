@@ -13,8 +13,12 @@ class LoginForm extends Component {
 
   onFinish = ({ email, password }) => {
     const { signWithEmail } = this.context;
+    const { history } = this.props;
     signWithEmail(email, password)
-      .then((res) => console.log(res))
+      .then((res) => {
+        localStorage.setItem("user", JSON.stringify(res.user.uid));
+        history.push("/");
+      })
       .catch((err) => this.onFinishFailed(err));
   };
 
