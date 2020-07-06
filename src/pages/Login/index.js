@@ -25,6 +25,7 @@ class LoginPage extends Component {
   };
   render() {
     const { isSignIn } = this.state;
+    const props = this.props;
     return (
       <>
         <Layout>
@@ -37,7 +38,7 @@ class LoginPage extends Component {
                 <BlockTitle>
                   {isSignIn ? "Приветствуем тебя!" : "Вход на LearnWords"}
                 </BlockTitle>
-                {isSignIn ? <SingInform /> : <LoginForm />}
+                {isSignIn ? <SingInform {...props}/> : <LoginForm {...props}/>}
                 <div className={s.loginCardControls}>
                   <Button type="link" onClick={this.toggleForms}>
                     {isSignIn ? "Вход" : "Регистрация"}
