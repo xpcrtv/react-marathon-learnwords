@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import s from "./CardPage.module.scss";
 
 import BlockTitle from "../../components/BlockTitle";
@@ -25,28 +24,33 @@ class CardPage extends Component {
     });
   }
 
-  componentWillUnmount() {
-    const { getUserCardRef } = this.context;
-    const { id } = this.props.match.params;
-    getUserCardRef(id).off();
-  }
+  handleBack = () => {
+    const { history } = this.props;
+    history.goBack();
+  };
 
   onFinish = (values) => {
     const { updateUserCard } = this.context;
     const { history, match } = this.props;
     const { id } = match.params;
-    updateUserCard(id, values).then(() => history.push("/"));
+    updateUserCard(id, values).then(() => history.goBack());
   };
   onFinishFailed = (error) => console.log(error);
   render() {
     return (
       <div className={s.cardPage}>
         <div className={s.cardPage_wrap}>
-          <Link to="/" className={s.cardPage_backBtn}>
-            <Button shape="round" type="dashed" icon={<RollbackOutlined />}>
+          <div className={s.cardPage_backBtn}>
+            <Button
+              onClick={this.handleBack}
+              shape="round"
+              type="dashed"
+              icon={<RollbackOutlined />}
+            >
               Назад
             </Button>
-          </Link>
+          </div>
+
           <BlockTitle className={s.cardPage_title}>
             Поменяйте карточку по своему усмотрению!
           </BlockTitle>

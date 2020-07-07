@@ -37,11 +37,6 @@ class HomePage extends Component {
     });
   }
 
-  componentWillUnmount() {
-    const { getUserCardsRef } = this.context;
-    getUserCardsRef().off();
-  }
-
   render() {
     const { words, features } = this.state;
     return (
