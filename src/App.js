@@ -8,12 +8,10 @@ import LoginPage from "./pages/Login";
 import CardPage from "./pages/Card";
 import NotFoundPage from "./pages/NotFound";
 
-import { Layout, Spin } from "antd";
+import { Spin } from "antd";
 
 import FirebaseContext from "./context/firebaseContext";
 import { PrivateRoute } from "./utils/PrivateRoute";
-
-const { Content } = Layout;
 
 class App extends Component {
   state = {
@@ -51,21 +49,13 @@ class App extends Component {
 
     return (
       <>
-        <Route path="/login" component={LoginPage} />
-        <Route
-          render={() => (
-            <Layout>
-              <Content>
-                <Switch>
-                  <PrivateRoute path="/" exact component={HomePage} />
-                  <PrivateRoute path="/home" component={HomePage} />
-                  <PrivateRoute path="/cards/:id" component={CardPage} />
-                  <Route component={NotFoundPage} />
-                </Switch>
-              </Content>
-            </Layout>
-          )}
-        />
+        <Switch>
+          <Route path="/login" component={LoginPage} />
+          <PrivateRoute path="/" exact component={HomePage} />
+          <PrivateRoute path="/home" component={HomePage} />
+          <PrivateRoute path="/cards?/:id" component={CardPage} />
+          <Route component={NotFoundPage} />
+        </Switch>
       </>
     );
   }
