@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import s from "./App.module.scss";
 
@@ -53,8 +53,9 @@ class App extends Component {
           <Route path="/login" component={LoginPage} />
           <PrivateRoute path="/" exact component={HomePage} />
           <PrivateRoute path="/home" component={HomePage} />
-          <PrivateRoute path="/cards?/:id" component={CardPage} />
-          <Route component={NotFoundPage} />
+          <PrivateRoute path="/cards/:id" component={CardPage} />
+          <Route path="/404" component={NotFoundPage} />
+          <Redirect to="/404" />
         </Switch>
       </>
     );

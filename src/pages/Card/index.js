@@ -13,14 +13,19 @@ class CardPage extends Component {
 
   componentDidMount() {
     const { getUserCardRef } = this.context;
-    const { id } = this.props.match.params;
+    const { history, match } = this.props;
+    const { id } = match.params;
     getUserCardRef(id).on("value", (res) => {
-      const { eng, rus, isRemembered } = res.val();
-      this.formRef.current.setFieldsValue({
-        eng,
-        rus,
-        isRemembered,
-      });
+      try {
+        const { eng, rus, isRemembered } = res.val();
+        this.formRef.current.setFieldsValue({
+          eng,
+          rus,
+          isRemembered,
+        });
+      } catch (e) {
+        history.push("/404");
+      }
     });
   }
 
