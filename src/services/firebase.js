@@ -36,6 +36,8 @@ class Firebase {
 
   getUserCardsRef = () => this.db.ref(`/cards/${this.userUid}`);
 
+  getUserCardRef = (id) => this.db.ref(`/cards/${this.userUid}/${id}`);
+
   removeUserCard = (id) => this.db.ref(`/cards/${this.userUid}/${id}`).remove();
 
   updateUserCard = (id, update) =>

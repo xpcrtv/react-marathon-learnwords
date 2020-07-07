@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {withRouter} from "react-router-dom";
 
 import { getTranslatedWord } from "../../services/dictionary";
 import Card from "../Card";
@@ -30,6 +31,8 @@ class CardList extends Component {
       })
       .then(() => {
         this.setState({
+          wordRus: "",
+          wordEng: "",
           isAddingWord: false,
         });
       });
@@ -44,6 +47,11 @@ class CardList extends Component {
     const { updateUserCard } = this.context;
     updateUserCard(id, { isRemembered: true });
   };
+
+  editCard = (id) => {
+    const {history} = this.props;
+    history.push(`/cards/${id}`)
+  }
 
   changeInputValue = (event) => {
     const { dataset, value } = event.target;
@@ -135,6 +143,7 @@ class CardList extends Component {
               cardData={cardData}
               onDeleteCard={() => this.removeCard(cardData.id)}
               onUpdateCard={() => this.rememberCard(cardData.id)}
+              onEditCard={() => this.editCard(cardData.id)}
             />
           ))}
         </div>
@@ -145,4 +154,4 @@ class CardList extends Component {
 
 CardList.contextType = FirebaseContext;
 
-export default CardList;
+export default withRouter(CardList);

@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import classnames from "classnames";
 
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import s from "./Card.module.scss";
 
 class Card extends Component {
@@ -18,7 +22,7 @@ class Card extends Component {
   };
 
   render() {
-    const { onDeleteCard, onUpdateCard, cardData } = this.props;
+    const { onDeleteCard, onUpdateCard, cardData, onEditCard } = this.props;
     const { eng, rus, isRemembered } = cardData;
     const { done } = this.state;
     const cardClass = classnames(s.card, { [s.done]: done || isRemembered });
@@ -40,6 +44,9 @@ class Card extends Component {
             disabled={isRemembered}
           >
             <CheckCircleOutlined />
+          </button>
+          <button className={s.cardEditBtn} onClick={onEditCard}>
+            <EditOutlined />
           </button>
           <button className={s.cardCloseBtn} onClick={onDeleteCard}>
             <CloseCircleOutlined />
