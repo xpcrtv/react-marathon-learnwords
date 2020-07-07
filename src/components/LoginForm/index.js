@@ -9,28 +9,51 @@ class LoginForm extends Component {
   state = {
     validateStatus: null,
     errorMsg: null,
+    isLoading: false,
   };
 
-  onFinish = ({ email, password }) => {
+  loginHandle = ({ email, password }) => {
     const { signWithEmail } = this.context;
     const { history } = this.props;
     signWithEmail(email, password)
       .then((res) => {
         localStorage.setItem("user", JSON.stringify(res.user.uid));
         history.push("/");
+        this.setState({
+          isLoading: false,
+        });
       })
       .catch((err) => this.onFinishFailed(err));
   };
 
-  onFinishFailed = () => {
+  errorHandle = () => {
     this.setState({
+      isLoading: false,
       validateStatus: "error",
       errorMsg: "Email или пароль введены неверно",
     });
   };
 
+  onFinish = (values) => {
+    this.setState(
+      {
+        isLoading: true,
+      },
+      () => this.loginHandle(values)
+    );
+  };
+
+  onFinishFailed = () => {
+    this.setState(
+      {
+        isLoading: true,
+      },
+      this.errorHandle
+    );
+  };
+
   render() {
-    const { validateStatus, errorMsg } = this.state;
+    const { validateStatus, errorMsg, isLoading } = this.state;
     return (
       <Form onFinish={this.onFinish} onFinishFailed={this.onFinishFailed}>
         <Form.Item
@@ -68,6 +91,7 @@ class LoginForm extends Component {
             block
             type="primary"
             htmlType="submit"
+            loading={isLoading}
             icon={<LoginOutlined />}
           >
             Войти
