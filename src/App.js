@@ -1,17 +1,22 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
-import s from "./App.module.scss";
+// import s from "./App.module.scss";
 
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import CardPage from "./pages/Card";
 import NotFoundPage from "./pages/NotFound";
 
-import { Spin } from "antd";
+// import { Spin } from "antd";
+
+import { connect } from "react-redux";
+import { addUserAction } from "./actions/userAction";
 
 import FirebaseContext from "./context/firebaseContext";
 import { PrivateRoute } from "./utils/PrivateRoute";
+import { bindActionCreators } from "redux";
+// import { UnorderedListOutlined } from "@ant-design/icons";
 
 class App extends Component {
   state = {
@@ -20,10 +25,12 @@ class App extends Component {
 
   componentDidMount() {
     const { auth, setUserUid } = this.context;
+    const { addUser } = this.props;
     auth.onAuthStateChanged((user) => {
       if (user) {
         setUserUid(user.uid);
         localStorage.setItem("user", JSON.stringify(user.uid));
+        addUser(user);
         this.setState({
           user,
         });
@@ -38,15 +45,6 @@ class App extends Component {
   }
 
   render() {
-    const { user } = this.state;
-    if (user === null) {
-      return (
-        <div className={s.spinner_wrap}>
-          <Spin size="large" />
-        </div>
-      );
-    }
-
     return (
       <>
         <Switch>
@@ -64,4 +62,19 @@ class App extends Component {
 
 App.contextType = FirebaseContext;
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    userUid: state.user.userUid,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      addUser: addUserAction,
+    },
+    dispatch
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
