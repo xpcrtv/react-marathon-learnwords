@@ -17,13 +17,17 @@ import subscribeImg from "../../assets/img/449.jpg";
 import cardsImg from "../../assets/img/450.jpg";
 import FirebaseContext from "../../context/firebaseContext";
 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { getCardsAction } from "../../actions/cardsListAction";
+
 class HomePage extends Component {
   state = {
-    words: [],
     features,
   };
 
   componentDidMount() {
+    const { getCards } = this.props;
     const { getUserCardsRef } = this.context;
     getUserCardsRef().on("value", (res) => {
       const resValues = res.val() || [];
@@ -31,14 +35,13 @@ class HomePage extends Component {
         id: key,
         ...resValues[key],
       }));
-      this.setState({
-        words: wordsarray,
-      });
+      getCards(wordsarray);
     });
   }
 
   render() {
-    const { words, features } = this.state;
+    const { features } = this.state;
+    const { cards } = this.props;
     return (
       <>
         <Header logoSrc={logo} title="Learn words" />
@@ -50,9 +53,7 @@ class HomePage extends Component {
         </HeaderBlock>
         <FeaturesList data={features} />
         <BgImageBlock imgSrc={cardsImg} bgcSize="cover">
-          <CardList
-            data={words}
-          />
+          <CardList data={cards} />
         </BgImageBlock>
         <BgImageBlock imgSrc={subscribeImg} bgcSize="cover">
           <SubscribeBlock />
@@ -65,4 +66,20 @@ class HomePage extends Component {
 
 HomePage.contextType = FirebaseContext;
 
-export default HomePage;
+const mapStateToProps = (state) => {
+  return {
+    userUid: state.user.userUid,
+    cards: state.cards.cards,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      getCards: getCardsAction,
+    },
+    dispatch
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

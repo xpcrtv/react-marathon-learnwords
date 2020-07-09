@@ -19,27 +19,17 @@ import { bindActionCreators } from "redux";
 // import { UnorderedListOutlined } from "@ant-design/icons";
 
 class App extends Component {
-  state = {
-    user: null,
-  };
-
   componentDidMount() {
     const { auth, setUserUid } = this.context;
     const { addUser } = this.props;
     auth.onAuthStateChanged((user) => {
       if (user) {
+        addUser(user);
         setUserUid(user.uid);
         localStorage.setItem("user", JSON.stringify(user.uid));
-        addUser(user);
-        this.setState({
-          user,
-        });
       } else {
         setUserUid(null);
         localStorage.removeItem("user");
-        this.setState({
-          user: false,
-        });
       }
     });
   }

@@ -28,11 +28,12 @@ class Firebase {
     firebase.initializeApp(firebaseConfig);
     this.db = firebase.database();
     this.auth = firebase.auth();
-
     this.userUid = null;
   }
 
-  setUserUid = (uid) => (this.userUid = uid);
+  setUserUid = (uid) => {
+    this.userUid = uid;
+  };
 
   getUserCardsRef = () => this.db.ref(`/cards/${this.userUid}`);
 
