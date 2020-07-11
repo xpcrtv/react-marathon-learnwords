@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
-// import s from "./App.module.scss";
+import s from "./App.module.scss";
 
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import CardPage from "./pages/Card";
 import NotFoundPage from "./pages/NotFound";
 
-// import { Spin } from "antd";
+import { Spin } from "antd";
 
 import { connect } from "react-redux";
 import { addUserAction } from "./actions/userAction";
@@ -16,25 +16,23 @@ import { addUserAction } from "./actions/userAction";
 import FirebaseContext from "./context/firebaseContext";
 import { PrivateRoute } from "./utils/PrivateRoute";
 import { bindActionCreators } from "redux";
-// import { UnorderedListOutlined } from "@ant-design/icons";
 
 class App extends Component {
   componentDidMount() {
     const { auth, setUserUid } = this.context;
     const { addUser } = this.props;
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        addUser(user);
-        setUserUid(user.uid);
-        localStorage.setItem("user", JSON.stringify(user.uid));
-      } else {
-        setUserUid(null);
-        localStorage.removeItem("user");
-      }
-    });
+    addUser(auth, setUserUid);
   }
 
   render() {
+    const { isAppLoading } = this.props;
+    if (isAppLoading) {
+      return (
+        <div className={s.spinner_wrap}>
+          <Spin />
+        </div>
+      );
+    }
     return (
       <>
         <Switch>
@@ -54,7 +52,8 @@ App.contextType = FirebaseContext;
 
 const mapStateToProps = (state) => {
   return {
-    userUid: state.user.userUid,
+    isAuth: state.user.isAuth,
+    isAppLoading: state.user.isAppLoading,
   };
 };
 

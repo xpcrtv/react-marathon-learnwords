@@ -10,11 +10,12 @@ import Firebase from "./services/firebase";
 
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
+import thunk from "redux-thunk";
 
 import logger from "redux-logger";
 
 import rootReducer from "./reducers";
-const store = new createStore(rootReducer, applyMiddleware(logger));
+export const store = new createStore(rootReducer, applyMiddleware(thunk, logger));
 
 ReactDOM.render(
   <Provider store={store}>

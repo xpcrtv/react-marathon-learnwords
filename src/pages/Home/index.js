@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import s from "./Home.module.scss";
+
 import Header from "../../components/Header";
 import HeaderBlock from "../../components/HeaderBlock";
 import Paragraph from "../../components/Paragraph";
@@ -10,6 +12,7 @@ import FeaturesList from "../../components/FeaturesList";
 import SubscribeBlock from "../../components/SubscribeBlock";
 
 import { featuresContent as features } from "../../data/featuresContent";
+import { Spin } from "antd";
 
 import Footer from "../../components/Footer";
 import logo from "../../logo.svg";
@@ -18,30 +21,21 @@ import cardsImg from "../../assets/img/450.jpg";
 import FirebaseContext from "../../context/firebaseContext";
 
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { getCardsAction } from "../../actions/cardsListAction";
 
 class HomePage extends Component {
   state = {
     features,
   };
-
-  componentDidMount() {
-    const { getCards } = this.props;
-    const { getUserCardsRef } = this.context;
-    getUserCardsRef().on("value", (res) => {
-      const resValues = res.val() || [];
-      const wordsarray = Object.keys(resValues).map((key) => ({
-        id: key,
-        ...resValues[key],
-      }));
-      getCards(wordsarray);
-    });
-  }
-
   render() {
     const { features } = this.state;
-    const { cards } = this.props;
+    const { isAppLoading, isAuth } = this.props;
+    if (isAppLoading || !isAuth) {
+      return (
+        <div className={s.spinner_wrap}>
+          <Spin />
+        </div>
+      );
+    }
     return (
       <>
         <Header logoSrc={logo} title="Learn words" />
@@ -53,7 +47,7 @@ class HomePage extends Component {
         </HeaderBlock>
         <FeaturesList data={features} />
         <BgImageBlock imgSrc={cardsImg} bgcSize="cover">
-          <CardList data={cards} />
+          <CardList />
         </BgImageBlock>
         <BgImageBlock imgSrc={subscribeImg} bgcSize="cover">
           <SubscribeBlock />
@@ -68,18 +62,9 @@ HomePage.contextType = FirebaseContext;
 
 const mapStateToProps = (state) => {
   return {
-    userUid: state.user.userUid,
-    cards: state.cards.cards,
+    isAuth: state.user.isAuth,
+    isAppLoading: state.user.isAppLoading,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
-    {
-      getCards: getCardsAction,
-    },
-    dispatch
-  );
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, null)(HomePage);

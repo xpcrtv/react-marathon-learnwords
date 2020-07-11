@@ -1,4 +1,9 @@
-export const ADD_USER = "ADD_USER";
 export const REMOVE_USER = "REMOVE_USER";
 
-export const GET_CARDS = "GET_CARDS";
+export const FETCH_USER = "FETCH_USER";
+export const FETCH_USER_RESOLVE = "FETCH_USER_RESOLVE";
+export const FETCH_USER_REJECT = "FETCH_USER_REJECT";
+
+export const FETCH_CARDS = "FETCH_CARDS";
+export const FETCH_CARDS_RESOLVE = "FETCH_CARDS_RESOLVE";
+export const FETCH_CARDS_REJECT = "FETCH_CARDS_REJECT";

@@ -8,13 +8,13 @@ import FirebaseContext from "../../context/firebaseContext";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { removeUserAction } from "../../actions/userAction";
+import { logoutAction } from "../../actions/userAction";
 
 class Header extends Component {
   handleLogout = () => {
-    const { logout } = this.context;
-    const { removeUser } = this.props;
-    logout().then(() => removeUser());
+    const { auth } = this.context;
+    const { logout } = this.props;
+    logout(auth);
   };
 
   render() {
@@ -47,7 +47,7 @@ Header.contextType = FirebaseContext;
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(
     {
-      removeUser: removeUserAction,
+      logout: logoutAction,
     },
     dispatch
   );
