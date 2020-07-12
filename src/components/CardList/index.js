@@ -1,16 +1,19 @@
 import React, { Component } from "react";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import { getTranslatedWord } from "../../services/dictionary";
 import Card from "../Card";
 import BlockTitle from "../BlockTitle";
 
 import { SwapOutlined, FileAddOutlined } from "@ant-design/icons";
-import { Form, Button, Input } from "antd";
+import { Form, Button, Input, Spin } from "antd";
 
 import s from "./CardList.module.scss";
-
 import FirebaseContext from "../../context/firebaseContext";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { getCardsAction } from "../../actions/cardsListAction";
 
 class CardList extends Component {
   state = {
@@ -19,6 +22,12 @@ class CardList extends Component {
     isTranslating: false,
     isAddingWord: false,
   };
+
+  componentDidMount() {
+    const { getCards } = this.props;
+    const { getUserCardsRef } = this.context;
+    getCards(getUserCardsRef);
+  }
 
   addCard = () => {
     const { getUserCardsRef } = this.context;
@@ -49,9 +58,9 @@ class CardList extends Component {
   };
 
   editCard = (id) => {
-    const {history} = this.props;
-    history.push(`/cards/${id}`)
-  }
+    const { history } = this.props;
+    history.push(`/cards/${id}`);
+  };
 
   changeInputValue = (event) => {
     const { dataset, value } = event.target;
@@ -93,8 +102,13 @@ class CardList extends Component {
   };
 
   render() {
-    const { data = [] } = this.props;
+    const { cards, isCardsLoading } = this.props;
     const { wordEng, wordRus, isTranslating, isAddingWord } = this.state;
+
+    if (isCardsLoading) {
+      return <Spin />;
+    }
+
     return (
       <>
         <BlockTitle color="white">
@@ -137,7 +151,7 @@ class CardList extends Component {
           </Input.Group>
         </Form>
         <div className={s.cards}>
-          {data.map((cardData) => (
+          {cards.map((cardData) => (
             <Card
               key={cardData.id}
               cardData={cardData}
@@ -154,4 +168,23 @@ class CardList extends Component {
 
 CardList.contextType = FirebaseContext;
 
-export default withRouter(CardList);
+const mapStateToProps = (state) => {
+  return {
+    cards: state.cards.cards || [],
+    isCardsLoading: state.cards.isCardsLoading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      getCards: getCardsAction,
+    },
+    dispatch
+  );
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(CardList));

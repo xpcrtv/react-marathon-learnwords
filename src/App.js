@@ -10,43 +10,29 @@ import NotFoundPage from "./pages/NotFound";
 
 import { Spin } from "antd";
 
+import { connect } from "react-redux";
+import { addUserAction } from "./actions/userAction";
+
 import FirebaseContext from "./context/firebaseContext";
 import { PrivateRoute } from "./utils/PrivateRoute";
+import { bindActionCreators } from "redux";
 
 class App extends Component {
-  state = {
-    user: null,
-  };
-
   componentDidMount() {
     const { auth, setUserUid } = this.context;
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUserUid(user.uid);
-        localStorage.setItem("user", JSON.stringify(user.uid));
-        this.setState({
-          user,
-        });
-      } else {
-        setUserUid(null);
-        localStorage.removeItem("user");
-        this.setState({
-          user: false,
-        });
-      }
-    });
+    const { addUser } = this.props;
+    addUser(auth, setUserUid);
   }
 
   render() {
-    const { user } = this.state;
-    if (user === null) {
+    const { isAppLoading } = this.props;
+    if (isAppLoading) {
       return (
         <div className={s.spinner_wrap}>
-          <Spin size="large" />
+          <Spin />
         </div>
       );
     }
-
     return (
       <>
         <Switch>
@@ -64,4 +50,20 @@ class App extends Component {
 
 App.contextType = FirebaseContext;
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    isAuth: state.user.isAuth,
+    isAppLoading: state.user.isAppLoading,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      addUser: addUserAction,
+    },
+    dispatch
+  );
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

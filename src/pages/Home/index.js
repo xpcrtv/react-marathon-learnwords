@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import s from "./Home.module.scss";
+
 import Header from "../../components/Header";
 import HeaderBlock from "../../components/HeaderBlock";
 import Paragraph from "../../components/Paragraph";
@@ -10,6 +12,7 @@ import FeaturesList from "../../components/FeaturesList";
 import SubscribeBlock from "../../components/SubscribeBlock";
 
 import { featuresContent as features } from "../../data/featuresContent";
+import { Spin } from "antd";
 
 import Footer from "../../components/Footer";
 import logo from "../../logo.svg";
@@ -17,28 +20,22 @@ import subscribeImg from "../../assets/img/449.jpg";
 import cardsImg from "../../assets/img/450.jpg";
 import FirebaseContext from "../../context/firebaseContext";
 
+import { connect } from "react-redux";
+
 class HomePage extends Component {
   state = {
-    words: [],
     features,
   };
-
-  componentDidMount() {
-    const { getUserCardsRef } = this.context;
-    getUserCardsRef().on("value", (res) => {
-      const resValues = res.val() || [];
-      const wordsarray = Object.keys(resValues).map((key) => ({
-        id: key,
-        ...resValues[key],
-      }));
-      this.setState({
-        words: wordsarray,
-      });
-    });
-  }
-
   render() {
-    const { words, features } = this.state;
+    const { features } = this.state;
+    const { isAppLoading, isAuth } = this.props;
+    if (isAppLoading || !isAuth) {
+      return (
+        <div className={s.spinner_wrap}>
+          <Spin />
+        </div>
+      );
+    }
     return (
       <>
         <Header logoSrc={logo} title="Learn words" />
@@ -50,9 +47,7 @@ class HomePage extends Component {
         </HeaderBlock>
         <FeaturesList data={features} />
         <BgImageBlock imgSrc={cardsImg} bgcSize="cover">
-          <CardList
-            data={words}
-          />
+          <CardList />
         </BgImageBlock>
         <BgImageBlock imgSrc={subscribeImg} bgcSize="cover">
           <SubscribeBlock />
@@ -65,4 +60,11 @@ class HomePage extends Component {
 
 HomePage.contextType = FirebaseContext;
 
-export default HomePage;
+const mapStateToProps = (state) => {
+  return {
+    isAuth: state.user.isAuth,
+    isAppLoading: state.user.isAppLoading,
+  };
+};
+
+export default connect(mapStateToProps, null)(HomePage);

@@ -15,13 +15,14 @@ class LoginForm extends Component {
   loginHandle = ({ email, password }) => {
     const { signWithEmail } = this.context;
     const { history } = this.props;
+
     signWithEmail(email, password)
       .then((res) => {
         localStorage.setItem("user", JSON.stringify(res.user.uid));
-        history.push("/");
         this.setState({
           isLoading: false,
         });
+        history.push("/");
       })
       .catch((err) => this.onFinishFailed(err));
   };

@@ -6,10 +6,15 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import FirebaseContext from "../../context/firebaseContext";
 
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { logoutAction } from "../../actions/userAction";
+
 class Header extends Component {
   handleLogout = () => {
-    const { logout } = this.context;
-    logout();
+    const { auth } = this.context;
+    const { logout } = this.props;
+    logout(auth);
   };
 
   render() {
@@ -39,4 +44,13 @@ class Header extends Component {
 
 Header.contextType = FirebaseContext;
 
-export default Header;
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      logout: logoutAction,
+    },
+    dispatch
+  );
+};
+
+export default connect(null, mapDispatchToProps)(Header);
