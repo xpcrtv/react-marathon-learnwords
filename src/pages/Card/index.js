@@ -15,18 +15,20 @@ class CardPage extends Component {
     const { getUserCardRef } = this.context;
     const { history, match } = this.props;
     const { id } = match.params;
-    getUserCardRef(id).on("value", (res) => {
-      try {
+    getUserCardRef(id)
+      .once("value")
+      .then((res) => {
         const { eng, rus, isRemembered } = res.val();
         this.formRef.current.setFieldsValue({
           eng,
           rus,
           isRemembered,
         });
-      } catch (e) {
+      })
+      .catch((err) => {
+        console.log(err);
         history.push("/404");
-      }
-    });
+      });
   }
 
   handleBack = () => {
