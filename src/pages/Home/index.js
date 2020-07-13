@@ -8,6 +8,7 @@ import Paragraph from "../../components/Paragraph";
 import BgImageBlock from "../../components/BgImageBlock";
 
 import CardList from "../../components/CardList";
+import AddWordForm from "../../components/AddWordForm";
 import FeaturesList from "../../components/FeaturesList";
 import SubscribeBlock from "../../components/SubscribeBlock";
 
@@ -47,6 +48,7 @@ class HomePage extends Component {
         </HeaderBlock>
         <FeaturesList data={features} />
         <BgImageBlock imgSrc={cardsImg} bgcSize="cover">
+          <AddWordForm />
           <CardList />
         </BgImageBlock>
         <BgImageBlock imgSrc={subscribeImg} bgcSize="cover">
