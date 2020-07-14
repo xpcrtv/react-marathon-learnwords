@@ -1,4 +1,7 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { withRouter } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import s from "./CardList.module.scss";
 
 import Card from "../Card";
@@ -6,20 +9,20 @@ import Card from "../Card";
 import { Spin } from "antd";
 
 import FirebaseContext from "../../context/firebaseContext";
-
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import { getCardsAction } from "../../actions/cardsListAction";
 
 const CardList = (props) => {
   const firebase = useContext(FirebaseContext);
-  const { getCards, cards, isCardsLoading, history } = props;
+  const dispatch = useDispatch();
+  const cards = useSelector((state) => state.cards.cards || []);
+  const isCardsLoading = useSelector((state) => state.cards.isCardsLoading);
+  const { history } = props;
   const { getUserCardsRef, removeUserCard, updateUserCard } = firebase;
 
-  useEffect(() => {
-    getCards(getUserCardsRef);
-  }, [getCards, getUserCardsRef]);
+  useEffect(() => dispatch(getCardsAction(getUserCardsRef)), [
+    dispatch,
+    getUserCardsRef,
+  ]);
 
   const removeCard = (id) => {
     removeUserCard(id);
@@ -58,23 +61,4 @@ const CardList = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    cards: state.cards.cards || [],
-    isCardsLoading: state.cards.isCardsLoading,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
-    {
-      getCards: getCardsAction,
-    },
-    dispatch
-  );
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(CardList));
+export default withRouter(CardList);
