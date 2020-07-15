@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useMemo } from "react";
 import { withRouter } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,7 +19,7 @@ const CardList = (props) => {
   const { history } = props;
   const { getUserCardsRef, removeUserCard, updateUserCard } = firebase;
 
-  useEffect(() => dispatch(getCardsAction(getUserCardsRef)), [
+  useMemo(() => dispatch(getCardsAction(getUserCardsRef)), [
     dispatch,
     getUserCardsRef,
   ]);
