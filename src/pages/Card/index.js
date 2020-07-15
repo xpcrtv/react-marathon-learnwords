@@ -1,36 +1,35 @@
 import React, { useEffect, useContext } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
 import s from "./CardPage.module.scss";
 
 import BlockTitle from "../../components/BlockTitle";
 
 import { SaveOutlined, RollbackOutlined } from "@ant-design/icons";
-import { Form, Input, Button, Switch } from "antd";
+import { Form, Input, Button, Switch, Spin } from "antd";
 
 import FirebaseContext from "../../context/firebaseContext";
+import { getCardAction } from "../../actions/cardPageAction";
 
 const CardPage = (props) => {
   const firebase = useContext(FirebaseContext);
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const isCardLoading = useSelector((state) => state.card.isCardLoading);
+  const card = useSelector((state) => state.card.card);
 
   useEffect(() => {
     const { getUserCardRef } = firebase;
-    const { history, match } = props;
+    const { match } = props;
     const { id } = match.params;
-    getUserCardRef(id)
-      .once("value")
-      .then((res) => {
-        const { eng, rus, isRemembered } = res.val();
-        form.setFieldsValue({
-          eng,
-          rus,
-          isRemembered,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        history.push("/404");
-      });
-  }, [firebase, props, form]);
+    dispatch(getCardAction(getUserCardRef, id));
+  }, []);
+
+  useEffect(() => {
+    if (!isCardLoading) {
+      form.setFieldsValue(card);
+    }
+  }, [isCardLoading, form, card]);
 
   const handleBack = () => {
     const { history } = props;
@@ -45,6 +44,14 @@ const CardPage = (props) => {
   };
 
   const onFinishFailed = (error) => console.log(error);
+
+  if (isCardLoading) {
+    return (
+      <div className={s.spinner_wrapper}>
+        <Spin />
+      </div>
+    );
+  }
 
   return (
     <div className={s.cardPage}>
