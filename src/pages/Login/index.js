@@ -1,58 +1,46 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
+
 import s from "./Login.module.scss";
+import logoSrc from "../../logo.svg";
 
 import LoginForm from "../../components/LoginForm";
 import SingInform from "../../components/SingInform";
 import BlockTitle from "../../components/BlockTitle";
 
 import { Layout, Button } from "antd";
-import FirebaseContext from "../../context/firebaseContext";
-
-import logoSrc from "../../logo.svg";
-
 const { Content } = Layout;
 
-class LoginPage extends Component {
-  state = {
-    isSignIn: false,
+const LoginPage = (props) => {
+  const [isSignIn, setSignIn] = useState(false);
+
+  const toggleForms = () => {
+    setSignIn(() => !isSignIn);
   };
-  toggleForms = () => {
-    this.setState(({ isSignIn }) => {
-      return {
-        isSignIn: !isSignIn,
-      };
-    });
-  };
-  render() {
-    const { isSignIn } = this.state;
-    const props = this.props;
-    return (
-      <>
-        <Layout>
-          <Content>
-            <div className={s.loginPage}>
-              <div className={s.loginCard}>
-                <div className={s.loginCardLogo}>
-                  <img src={logoSrc} alt="" />
-                </div>
-                <BlockTitle>
-                  {isSignIn ? "Приветствуем тебя!" : "Вход на LearnWords"}
-                </BlockTitle>
-                {isSignIn ? <SingInform {...props}/> : <LoginForm {...props}/>}
-                <div className={s.loginCardControls}>
-                  <Button type="link" onClick={this.toggleForms}>
-                    {isSignIn ? "Вход" : "Регистрация"}
-                  </Button>
-                </div>
+
+  return (
+    <>
+      <Layout>
+        <Content>
+          <div className={s.loginPage}>
+            <div className={s.loginCard}>
+              <div className={s.loginCardLogo}>
+                <img src={logoSrc} alt="" />
+              </div>
+              <BlockTitle>
+                {isSignIn ? "Приветствуем тебя!" : "Вход на LearnWords"}
+              </BlockTitle>
+              {isSignIn ? <SingInform {...props} /> : <LoginForm {...props} />}
+              <div className={s.loginCardControls}>
+                <Button type="link" onClick={toggleForms}>
+                  {isSignIn ? "Вход" : "Регистрация"}
+                </Button>
               </div>
             </div>
-          </Content>
-        </Layout>
-      </>
-    );
-  }
-}
-
-LoginPage.contextType = FirebaseContext;
+          </div>
+        </Content>
+      </Layout>
+    </>
+  );
+};
 
 export default LoginPage;

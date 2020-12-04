@@ -4,7 +4,6 @@ import {
   FETCH_USER_RESOLVE,
   FETCH_USER_REJECT,
 } from "./actionTypes";
-import { responsiveArray } from "antd/lib/_util/responsiveObserve";
 
 export const addUserAction = (auth, setUid) => {
   return (dispatch) => {
