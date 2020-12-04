@@ -1,0 +1,48 @@
+.cardsAddForm {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
+  label {
+    width: 35%;
+    color: white;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 4px;
+    border: none;
+    color: black;
+  }
+  &Icon {
+    width: 5%;
+    color: white;
+    cursor: pointer;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
+  }
+  &Btn {
+    align-self: stretch;
+    cursor: pointer;
+    padding: 10px;
+    margin: 5px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    background-color: #1890ff;
+    @media screen and (max-width: 768px) {
+      margin: 5px auto;
+    }
+  }
+}

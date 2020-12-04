@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { useContext, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Route, Switch, Redirect } from "react-router-dom";
 
 import s from "./App.module.scss";
@@ -10,60 +11,41 @@ import NotFoundPage from "./pages/NotFound";
 
 import { Spin } from "antd";
 
-import { connect } from "react-redux";
 import { addUserAction } from "./actions/userAction";
 
 import FirebaseContext from "./context/firebaseContext";
 import { PrivateRoute } from "./utils/PrivateRoute";
-import { bindActionCreators } from "redux";
 
-class App extends Component {
-  componentDidMount() {
-    const { auth, setUserUid } = this.context;
-    const { addUser } = this.props;
-    addUser(auth, setUserUid);
-  }
+const App = () => {
+  const firebase = useContext(FirebaseContext);
+  const dispatch = useDispatch();
+  const isAppLoading = useSelector((state) => state.user.isAppLoading);
 
-  render() {
-    const { isAppLoading } = this.props;
-    if (isAppLoading) {
-      return (
-        <div className={s.spinner_wrap}>
-          <Spin />
-        </div>
-      );
-    }
+  useEffect(() => {
+    const { auth, setUserUid } = firebase;
+    dispatch(addUserAction(auth, setUserUid));
+  }, [dispatch, firebase]);
+
+  if (isAppLoading) {
     return (
-      <>
-        <Switch>
-          <Route path="/login" component={LoginPage} />
-          <PrivateRoute path="/" exact component={HomePage} />
-          <PrivateRoute path="/home" component={HomePage} />
-          <PrivateRoute path="/cards/:id" component={CardPage} />
-          <Route path="/404" component={NotFoundPage} />
-          <Redirect to="/404" />
-        </Switch>
-      </>
+      <div className={s.spinner_wrap}>
+        <Spin />
+      </div>
     );
   }
-}
 
-App.contextType = FirebaseContext;
-
-const mapStateToProps = (state) => {
-  return {
-    isAuth: state.user.isAuth,
-    isAppLoading: state.user.isAppLoading,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(
-    {
-      addUser: addUserAction,
-    },
-    dispatch
+  return (
+    <>
+      <Switch>
+        <Route path="/login" component={LoginPage} />
+        <PrivateRoute path="/" exact component={HomePage} />
+        <PrivateRoute path="/home" component={HomePage} />
+        <PrivateRoute path="/cards/:id" component={CardPage} />
+        <Route path="/404" component={NotFoundPage} />
+        <Redirect to="/404" />
+      </Switch>
+    </>
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
