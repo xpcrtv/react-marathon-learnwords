@@ -25,7 +25,7 @@ const AddWordForm = () => {
     setWorkProcess((store) => ({ ...store, isTranslating: true }));
     const translatedWord = await getTranslatedWord(cardData.wordEng);
     setWorkProcess((store) => ({ ...store, isTranslating: false }));
-    setCardData((store) => ({ ...store, wordRus: translatedWord.translate }));
+    setCardData((store) => ({ ...store, wordRus: translatedWord}));
   };
 
   const inputHandler = (event) => {
