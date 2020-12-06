@@ -23,6 +23,7 @@ const CardPage = (props) => {
     const { match } = props;
     const { id } = match.params;
     dispatch(getCardAction(getUserCardRef, id));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
